@@ -40,7 +40,7 @@ public class WallBlockScript : MonoBehaviour {
 		
 		if (other.tag == "bullet") {
 			other.GetComponent<BulletScript> ().createExplosion ();
-			Destroy(other);
+			//Destroy(other);
 		}
 
 	}

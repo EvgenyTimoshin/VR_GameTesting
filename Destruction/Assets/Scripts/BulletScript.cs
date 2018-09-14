@@ -14,7 +14,7 @@ public class BulletScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate (Vector3.forward * Time.deltaTime * 10);
+		//transform.Translate (Vector3.forward * Time.deltaTime * 10);
 	}
 
 	public void createExplosion(){
@@ -22,16 +22,18 @@ public class BulletScript : MonoBehaviour {
 		Collider[] colliders = Physics.OverlapSphere (explosionPos, explRadius);
 		WallBlockScript blockScript;
 		foreach (Collider hit in colliders) {
-			blockScript = hit.transform.gameObject.GetComponent<WallBlockScript> ();
+			if (hit.tag != "car") {
+				blockScript = hit.transform.gameObject.GetComponent<WallBlockScript> ();
 
-			if (blockScript != null) {
-				blockScript.UnFreezeRb ();	
-			}
+				if (blockScript != null) {
+					blockScript.UnFreezeRb ();	
+				}
 
-			Rigidbody rb = hit.GetComponent<Rigidbody> ();
+				Rigidbody rb = hit.GetComponent<Rigidbody> ();
 
-			if (rb != null) {
-				rb.AddExplosionForce (explPower, explosionPos, explRadius);
+				if (rb != null) {
+					rb.AddExplosionForce (explPower, explosionPos, explRadius);
+				}
 			}
 		}
 	}

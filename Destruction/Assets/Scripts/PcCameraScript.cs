@@ -4,24 +4,28 @@ using UnityEngine;
 
 public class PcCameraScript : MonoBehaviour {
 
-	public GameObject vehicle;
-	Rigidbody rb;
+	public Transform objectToFollow;
+	public Vector3 offset;
+	public float followSpeed = 10;
+	public float lookSpeed = 10;
 
-	// Use this for initialization
-	void Start () {
-		rb = vehicle.GetComponent<Rigidbody> ();
+	public void LookAtTarget(){
+		Vector3 _lookDirection = objectToFollow.position - transform.position;
+		Quaternion _rot = Quaternion.LookRotation (_lookDirection, Vector3.up);
+		transform.rotation = Quaternion.Lerp (transform.rotation, _rot, lookSpeed * Time.deltaTime);
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	public void MoveToTarget(){
+		Vector3 _targetPos = objectToFollow.position +
+		                     objectToFollow.forward * offset.z +
+							objectToFollow.right * offset.x +
+		                     objectToFollow.up * offset.y;
+		transform.position = Vector3.Lerp (transform.position, _targetPos, followSpeed * Time.deltaTime);
 		
 	}
 
-	void LateUpdate(){
-		Vector3 targetCamPosition = new Vector3(vehicle.transform.position.x - 0.5f, 
-			vehicle.transform.position.y + 1f,
-			 vehicle.transform.position.z - 0.2f);
-
-		transform.position = rb.position - Vector3.forward * 2;
+	private void FixedUpdate(){
+		LookAtTarget ();
+		MoveToTarget ();
 	}
 }
